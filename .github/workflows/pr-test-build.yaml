@@ -19,8 +19,11 @@ jobs:
 
       - name: Download Dalamud Latest
         run: |
-          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
-          Expand-Archive -Force latest.zip -DestinationPath "$env:AppData\XIVLauncher\addon\Hooks\dev"
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile dalamud-global.zip
+          Expand-Archive -Force dalamud-global.zip -DestinationPath "$env:AppData\XIVLauncher\addon\Hooks\dev"
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/ReiwaTech/dalamud-distrib/main/cn/latest.zip -OutFile dalamud-cn.zip
+          Expand-Archive -Force dalamud-cn.zip -DestinationPath "$env:AppData\XIVLauncherCN\addon\Hooks\dev"
+          Remove-Item dalamud-global.zip, dalamud-cn.zip
 
       - name: Restore Nuget Packages
         run: dotnet restore Gatherbuddy/Gatherbuddy.csproj

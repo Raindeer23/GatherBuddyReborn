@@ -31,8 +31,11 @@ jobs:
 
       - name: Download Dalamud Latest
         run: |
-          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
-          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile dalamud-global.zip
+          Expand-Archive -Force dalamud-global.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/ReiwaTech/dalamud-distrib/main/cn/latest.zip -OutFile dalamud-cn.zip
+          Expand-Archive -Force dalamud-cn.zip "$env:AppData\XIVLauncherCN\addon\Hooks\dev"
+          Remove-Item dalamud-global.zip, dalamud-cn.zip
 
       - name: Restore Nuget Packages
         run: dotnet restore Gatherbuddy/Gatherbuddy.csproj
@@ -54,10 +57,10 @@ jobs:
           Write-Host "Successfully built and copied raphael-cli.exe"
 
       - name: Zip Plugin
-        run: Compress-Archive -Path .\build\* -DestinationPath .\build\GatherbuddyReborn.zip
+        run: Compress-Archive -Path .\build\* -DestinationPath .\latest.zip
 
       - name: Publish Plugin
         uses: softprops/action-gh-release@v3
         with:
-          files: ./build/GatherbuddyReborn.zip
+          files: ./latest.zip
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -112,14 +112,14 @@ public readonly struct TimeInterval : IEquatable<TimeInterval>
         return tmp.Time switch
         {
             > RealTime.MillisecondsPerDay => shortString
-                ? $">{tmp.TotalDays}"
-                : $"{((float)tmp.Time / RealTime.MillisecondsPerDay).ToString("F2", CultureInfo.InvariantCulture)}",
+                ? $">{tmp.TotalDays}d"
+                : $"{((float)tmp.Time / RealTime.MillisecondsPerDay).ToString("F2", CultureInfo.InvariantCulture)} 天",
             > RealTime.MillisecondsPerHour => shortString
-                ? $">{tmp.TotalHours}"
-                : $"{tmp.TotalHours:D2}:{tmp.CurrentMinute:D2}",
+                ? $">{tmp.TotalHours}h"
+                : $"{tmp.TotalHours:D2}:{tmp.CurrentMinute:D2} 小时",
             _ => shortString
-                ? $"{tmp.TotalMinutes}:{tmp.CurrentSecond:D2}"
-                : $"{tmp.TotalMinutes:D2}:{tmp.CurrentSecond:D2}",
+                ? $"{tmp.TotalMinutes}:{tmp.CurrentSecond:D2}m"
+                : $"{tmp.TotalMinutes:D2}:{tmp.CurrentSecond:D2} 分钟",
         };
     }
 
