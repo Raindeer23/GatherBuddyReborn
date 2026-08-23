@@ -9,25 +9,61 @@ internal static class FishStrategyTextRenderer
 {
     public static void DrawParagraph(string paragraph, float width)
     {
-        var line      = new StringBuilder();
-        var lineWidth = 0f;
+        var line         = new StringBuilder();
+        var lines        = new List<string>();
+        var prefixWidth  = ImGui.CalcTextSize("• ").X;
+        var contentWidth = Math.Max(width - prefixWidth, ImGui.GetFontSize() * 4f);
+        var lineWidth    = 0f;
+        var pendingSpace = false;
 
         foreach (var token in Tokens(paragraph))
         {
-            var tokenWidth = ImGui.CalcTextSize(token).X;
-            if (line.Length > 0 && lineWidth + tokenWidth > width)
+            if (string.IsNullOrWhiteSpace(token))
             {
-                ImGui.TextUnformatted(line.ToString());
-                line.Clear();
-                lineWidth = 0f;
+                pendingSpace = line.Length > 0;
+                continue;
             }
 
+            var tokenWidth = ImGui.CalcTextSize(token).X;
+            var spaceWidth = pendingSpace ? ImGui.CalcTextSize(" ").X : 0f;
+            if (line.Length > 0 && lineWidth + spaceWidth + tokenWidth > contentWidth)
+            {
+                lines.Add(line.ToString());
+                line.Clear();
+                lineWidth    = 0f;
+                pendingSpace = false;
+            }
+
+            if (pendingSpace && line.Length > 0)
+            {
+                line.Append(' ');
+                lineWidth += spaceWidth;
+            }
             line.Append(token);
             lineWidth += tokenWidth;
+            pendingSpace = false;
         }
 
         if (line.Length > 0)
-            ImGui.TextUnformatted(line.ToString());
+            lines.Add(line.ToString());
+
+        if (lines.Count == 0)
+            return;
+
+        ImGui.TextUnformatted("• " + lines[0]);
+        if (lines.Count == 1)
+            return;
+
+        ImGui.Indent(prefixWidth);
+        try
+        {
+            for (var index = 1; index < lines.Count; ++index)
+                ImGui.TextUnformatted(lines[index]);
+        }
+        finally
+        {
+            ImGui.Unindent(prefixWidth);
+        }
     }
 
     private static IEnumerable<string> Tokens(string text)

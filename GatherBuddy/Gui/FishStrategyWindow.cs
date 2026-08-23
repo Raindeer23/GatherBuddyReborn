@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
@@ -90,7 +91,7 @@ public sealed class FishStrategyWindow : Window
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("复制钓法");
         if (copy)
-            ImGui.SetClipboardText(string.Join("\n\n", strategy.Paragraphs));
+            ImGui.SetClipboardText(string.Join("\n", strategy.Paragraphs.Select(paragraph => $"• {paragraph}")));
 
         ImGui.SameLine();
         bool openSource;
