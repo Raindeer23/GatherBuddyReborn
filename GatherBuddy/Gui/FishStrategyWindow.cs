@@ -23,7 +23,7 @@ public sealed class FishStrategyWindow : Window
         SizeCondition = ImGuiCond.FirstUseEver;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = VulcanUiScaling.Scaled(360f, 180f),
+            MinimumSize = Vector2.Zero,
             MaximumSize = VulcanUiScaling.Scaled(800f, 700f),
         };
         ShowCloseButton   = true;
@@ -63,7 +63,7 @@ public sealed class FishStrategyWindow : Window
 
             foreach (var paragraph in _strategy.Paragraphs)
             {
-                ImGui.TextWrapped(paragraph);
+                FishStrategyTextRenderer.DrawParagraph(paragraph, ImGui.GetContentRegionAvail().X);
                 ImGui.Spacing();
             }
 

@@ -551,18 +551,11 @@ public partial class Interface
             ImGui.Separator();
             ImGui.Spacing();
             ImGui.TextColored(new Vector4(1f, 0.65f, 0.2f, 1f), "钓法");
-            ImGui.PushTextWrapPos(ImGui.GetCursorPosX() + ImGui.GetFontSize() * 40f);
-            try
+            var paragraphWidth = ImGui.GetFontSize() * 20f;
+            foreach (var paragraph in strategy.Paragraphs)
             {
-                foreach (var paragraph in strategy.Paragraphs)
-                {
-                    ImGui.TextUnformatted(paragraph);
-                    ImGui.Spacing();
-                }
-            }
-            finally
-            {
-                ImGui.PopTextWrapPos();
+                FishStrategyTextRenderer.DrawParagraph(paragraph, paragraphWidth);
+                ImGui.Spacing();
             }
 
             ImGui.TextDisabled(strategy.Author == null
