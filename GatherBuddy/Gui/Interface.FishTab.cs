@@ -7,6 +7,7 @@ using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using GatherBuddy.Classes;
 using GatherBuddy.Config;
+using GatherBuddy.CustomInfo;
 using GatherBuddy.Enums;
 using GatherBuddy.Interfaces;
 using GatherBuddy.Plugin;
@@ -23,6 +24,7 @@ public partial class Interface
     private sealed class FishTable : Table<ExtendedFish>, IDisposable
     {
         private static float _nameColumnWidth;
+        private static float _strategyColumnWidth;
         private static float _caughtColumnWidth;
         private static float _nextUptimeColumnWidth;
         private static float _uptimeColumnWidth;
@@ -45,6 +47,8 @@ public partial class Interface
                 _globalScale       = ImGuiHelpers.GlobalScale;
                 _caughtColumnWidth = TextWidth(_caughtColumn.Label) / Scale + Table.ArrowWidth + 5;  // 已记录: +5 调整宽度，匹配中文
                 _nameColumnWidth   = (Items.Max(i => TextWidth(i.Data.Name[GatherBuddy.Language])) + ItemSpacing.X + LineIconSize.X) / Scale;
+                _strategyColumnWidth = Math.Max(TextWidth(_strategyColumn.Label) / Scale + 5,
+                    IconButtonSize.X / Scale + ItemSpacing.X / Scale);
                 _nextUptimeColumnWidth = Math.Max(TextWidth("99:99 分钟") / Scale,
                     TextWidth(_nextUptimeColumn.Label) / Scale + Table.ArrowWidth + 10); // 下次窗口期: +10 调整宽度，匹配中文
                 _uptimeColumnWidth           = TextWidth("999.9%") / Scale + 8; // 概率%: +8 调整宽度，匹配中文
@@ -65,7 +69,7 @@ public partial class Interface
 
         public FishTable()
             : base("##FishTable", ExtendedFishList.Count > 0 ? _extendedFishList! : new List<ExtendedFish>(), _nameColumn,
-                _caughtColumn, _nextUptimeColumn, _uptimeColumn,
+                _strategyColumn, _caughtColumn, _nextUptimeColumn, _uptimeColumn,
                 _baitColumn, _bestSpotColumn, _typeColumn, _collectibleColumn, _patchColumn, _folkloreColumn, _aetheryteColumn, _bestZoneColumn,
                 _itemIdColumn,
                 _fishIdColumn)
@@ -77,6 +81,7 @@ public partial class Interface
         }
 
         private static readonly NameColumn        _nameColumn        = new() { Label = "物品名称..." };
+        private static readonly StrategyColumn    _strategyColumn    = new() { Label = "钓法" };
         private static readonly CaughtColumn      _caughtColumn      = new() { Label = "已记录" };
         private static readonly NextUptimeColumn  _nextUptimeColumn  = new() { Label = "下次窗口期" };
         private static readonly UptimesColumn     _uptimeColumn      = new() { Label = "概率%" };
@@ -160,6 +165,30 @@ public partial class Interface
                     _plugin.Executor.GatherItem(item.Data);
                 if (hovered)
                     item.SetTooltip(item.Uptime.Item1.Territory, IconSize, SmallIconSize, WeatherIconSize, false);
+            }
+        }
+
+        private sealed class StrategyColumn : Column<ExtendedFish>
+        {
+            public StrategyColumn()
+                => Flags |= ImGuiTableColumnFlags.NoSort;
+
+            public override float Width
+                => _strategyColumnWidth * ImGuiHelpers.GlobalScale;
+
+            public override void DrawColumn(ExtendedFish item, int id)
+            {
+                if (!FishStrategyCatalog.TryGet(item.Data, out _))
+                    return;
+
+                bool clicked;
+                using (ImRaii.PushFont(UiBuilder.IconFont))
+                    clicked = ImGui.Button(FontAwesomeIcon.BookOpen.ToIconString() + "##FishStrategy", IconButtonSize);
+
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip("查看钓法");
+                if (clicked)
+                    GatherBuddy.FishStrategyWindow?.Open(item);
             }
         }
 

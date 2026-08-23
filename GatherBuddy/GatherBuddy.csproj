@@ -5,7 +5,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <RootNamespace>GatherBuddy</RootNamespace>
     <AssemblyName>GatherBuddyReborn</AssemblyName>
-    <Version>7.5.0.10</Version>
+    <Version>7.5.0.11</Version>
     <Company>SoftOtter</Company>
     <Product>GatherBuddy</Product>
     <Copyright>Copyright © 2026</Copyright>
@@ -35,10 +35,15 @@
     <None Remove="CustomInfo\IlvConvertTable.csv" />
     <None Remove="CustomInfo\mob_drop_overrides.json" />
     <None Remove="CustomInfo\world_locations.json" />
+    <None Remove="CustomInfo\fish_strategies.zh-CN.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="CustomInfo\world_locations.json" />
+    <EmbeddedResource Include="CustomInfo\fish_strategies.zh-CN.json">
+      <WithCulture>false</WithCulture>
+      <LogicalName>GatherBuddy.CustomInfo.fish_strategies.zh-CN.json</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomInfo\mob_drop_overrides.json" />
     <None Remove="CustomInfo\node_offsets.json" />
     <EmbeddedResource Include="CustomInfo\node_offsets.json" />

@@ -82,6 +82,7 @@ public partial class GatherBuddy : IDalamudPlugin
     public static Gui.CraftingTreeWindow? CraftingTreeWindow { get; private set; }
     public static Gui.VendorBuyListWindow? VendorBuyListWindow { get; private set; }
     public static Gui.CollectablesWindow? CollectablesWindow { get; private set; }
+    public static Gui.FishStrategyWindow? FishStrategyWindow { get; private set; }
     internal static Gui.NativeItemTooltipBridge? NativeItemTooltipBridge { get; private set; }
     public static ControllerSupportManager?      ControllerSupport      { get; private set; }
     public static MarketboardService?             MarketboardService     { get; private set; }
@@ -189,6 +190,7 @@ public partial class GatherBuddy : IDalamudPlugin
             VendorBuyListWindow = _vendorBuyListWindow;
             _collectablesWindow = new Gui.CollectablesWindow();
             CollectablesWindow = _collectablesWindow;
+            FishStrategyWindow = new Gui.FishStrategyWindow();
             NativeItemTooltipBridge = new Gui.NativeItemTooltipBridge();
             WindowSystem.AddWindow(Interface);
             WindowSystem.AddWindow(new GatherWindow(this));
@@ -200,6 +202,7 @@ public partial class GatherBuddy : IDalamudPlugin
             WindowSystem.AddWindow(_craftingTreeWindow);
             WindowSystem.AddWindow(_vendorBuyListWindow);
             WindowSystem.AddWindow(_collectablesWindow);
+            WindowSystem.AddWindow(FishStrategyWindow);
             Dalamud.PluginInterface.UiBuilder.Draw         += DrawUi;
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi += Interface.Toggle;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi   += Interface.Toggle;
