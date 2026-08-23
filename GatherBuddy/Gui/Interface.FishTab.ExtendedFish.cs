@@ -2,6 +2,7 @@ using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using GatherBuddy.Classes;
 using GatherBuddy.Config;
+using GatherBuddy.CustomInfo;
 using GatherBuddy.Enums;
 using GatherBuddy.Interfaces;
 using GatherBuddy.Time;
@@ -541,6 +542,34 @@ public partial class Interface
                 ImUtf8.TextFramed($"任务评价: {fish.Data.Points} 点", 0xFF006400);
         }
 
+        private static void PrintStrategy(ExtendedFish fish)
+        {
+            if (!FishStrategyCatalog.TryGet(fish.Data, out var strategy))
+                return;
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+            ImGui.TextColored(new Vector4(1f, 0.65f, 0.2f, 1f), "钓法");
+            ImGui.PushTextWrapPos(ImGui.GetCursorPosX() + ImGui.GetFontSize() * 40f);
+            try
+            {
+                foreach (var paragraph in strategy.Paragraphs)
+                {
+                    ImGui.TextUnformatted(paragraph);
+                    ImGui.Spacing();
+                }
+            }
+            finally
+            {
+                ImGui.PopTextWrapPos();
+            }
+
+            ImGui.TextDisabled(strategy.Author == null
+                ? $"来源: {FishStrategyCatalog.SourceCredit}"
+                : $"作者: {strategy.Author} · 来源: {FishStrategyCatalog.SourceCredit}");
+        }
+
         public void SetTooltip(Territory territory, Vector2 iconSize, Vector2 smallIconSize, Vector2 weatherIconSize, bool printName,
             bool standAlone = true)
         {
@@ -555,6 +584,7 @@ public partial class Interface
             PrintPredators(this, territory, iconSize);
             PrintPoints(this);
             PrintFolklore(this);
+            PrintStrategy(this);
         }
     }
 }

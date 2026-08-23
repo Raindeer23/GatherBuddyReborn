@@ -66,7 +66,7 @@ public static partial class Fish
             .Time(900, 960)
             .Bite(data, HookSet.Precise, BiteType.鱼王竿);
         data.Apply(52008, Patch.TrailToTheHeavens) // Xehabopo'u
-            .Mooch(data, 43697)
+            .Mooch(data, 43858, 43697)
             .Time(780, 900)
             .Predators(data, 360, (43697, 6))
             .Transition(data, 3)

@@ -11,7 +11,7 @@ namespace GatherBuddy.Gui;
 
 public sealed class FishStrategyWindow : Window
 {
-    public const string WindowId = "钓鱼攻略###GatherBuddyFishStrategyWindow";
+    public const string WindowId = "钓鱼攻略###GatherBuddyFishStrategyWindowCompact";
 
     private Interface.ExtendedFish? _fish;
     private FishStrategyEntry?      _strategy;
@@ -19,12 +19,12 @@ public sealed class FishStrategyWindow : Window
     public FishStrategyWindow()
         : base(WindowId)
     {
-        Size          = VulcanUiScaling.Scaled(620f, 560f);
+        Size          = VulcanUiScaling.Scaled(500f, 260f);
         SizeCondition = ImGuiCond.FirstUseEver;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = VulcanUiScaling.Scaled(420f, 300f),
-            MaximumSize = VulcanUiScaling.Scaled(1200f, 1600f),
+            MinimumSize = VulcanUiScaling.Scaled(360f, 180f),
+            MaximumSize = VulcanUiScaling.Scaled(800f, 700f),
         };
         ShowCloseButton   = true;
         RespectCloseHotkey = true;
@@ -44,7 +44,7 @@ public sealed class FishStrategyWindow : Window
     public override void PreDraw()
     {
         if (_fish != null)
-            WindowName = $"{_fish.Data.Name[GatherBuddy.Language]} - 钓法###GatherBuddyFishStrategyWindow";
+            WindowName = $"{_fish.Data.Name[GatherBuddy.Language]} - 钓法###GatherBuddyFishStrategyWindowCompact";
     }
 
     public override void Draw()
@@ -58,12 +58,6 @@ public sealed class FishStrategyWindow : Window
         ImGui.BeginChild("##FishStrategyScroll", Vector2.Zero, false);
         try
         {
-            _fish.SetTooltip(_fish.Uptime.Item1.Territory, Interface.IconSize, Interface.SmallIconSize,
-                Interface.WeatherIconSize, true, false);
-
-            ImGui.Spacing();
-            ImGui.Separator();
-            ImGui.Spacing();
             ImGui.TextColored(ImGuiColors.DalamudOrange, "钓法");
             ImGui.Spacing();
 
