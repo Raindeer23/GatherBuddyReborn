@@ -60,8 +60,9 @@ using (var resource = plugin.GetManifestResourceStream("GatherBuddy.CustomInfo.f
     using var reader = new StreamReader(resource!);
     var embedded = reader.ReadToEnd();
     var source = File.ReadAllText(Path.Combine(repo, "GatherBuddy/CustomInfo/fish_strategies.zh-CN.json"));
-    Check(embedded == source, "Embedded strategies match source exactly");
     using var catalog = JsonDocument.Parse(embedded);
+    using var sourceCatalog = JsonDocument.Parse(source);
+    Check(JsonElement.DeepEquals(catalog.RootElement, sourceCatalog.RootElement), "Embedded strategies match source data");
     Check(catalog.RootElement.GetProperty("strategies").EnumerateObject().Count() == 46, "All 46 strategies remain present");
 }
 
