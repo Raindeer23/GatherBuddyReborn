@@ -220,8 +220,10 @@ public partial class Interface
         ImGui.SetNextItemWidth(85 * ImGuiHelpers.GlobalScale);
         if (ImGui.Combo("##Sound", ref idx, AlarmCache.SoundIdNames))
         {
-            _plugin.AlarmManager.ChangeAlarmSound(group, alarmIdx, AlarmCache.SoundIds[idx]);
-            AlarmManager.PreviewAlarm(AlarmCache.SoundIds[idx]);
+            var sound = AlarmCache.SoundIds[idx];
+            _plugin.AlarmManager.ChangeAlarmSound(group, alarmIdx, sound);
+            if(sound is not Sounds.None)
+                AlarmManager.PreviewAlarm(sound);
         }
         ImGuiUtil.HoverTooltip("闹钟触发时播放音效。");
 

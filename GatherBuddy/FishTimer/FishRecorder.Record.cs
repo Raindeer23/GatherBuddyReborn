@@ -20,6 +20,8 @@ namespace GatherBuddy.FishTimer;
 
 public partial class FishRecorder
 {
+    public delegate void RecordCreatedDelegate(in FishRecord record);
+    public event RecordCreatedDelegate? RecordCreated;
     public const int DeadLureTiming    = 5000;
     public const int InvalidLureTiming = DeadLureTiming + 500;
 
@@ -272,6 +274,7 @@ public partial class FishRecorder
         Step = CatchSteps.None;
         if (GatherBuddy.Config.StoreFishRecords)
             Add(Record);
+        RecordCreated?.Invoke(Record);
     }
 
     private void OnFrameworkUpdate(IFramework _)

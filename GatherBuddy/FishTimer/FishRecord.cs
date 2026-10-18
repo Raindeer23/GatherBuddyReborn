@@ -131,7 +131,7 @@ public partial class FishRecord
     [JsonIgnore]
     public TimeStamp TimeStamp
     {
-        get => new(_timeStamp * 1000L);
+        readonly get => new(_timeStamp * 1000L);
         set => _timeStamp = (int)(value.Time / 1000);
     }
 
@@ -167,12 +167,12 @@ public partial class FishRecord
     [JsonIgnore]
     public FishingSpot? FishingSpot
     {
-        get => HasSpot ? GatherBuddy.GameData.FishingSpots.GetValueOrDefault(_fishingSpot) : null;
+        readonly get => HasSpot ? GatherBuddy.GameData.FishingSpots.GetValueOrDefault(_fishingSpot) : null;
         set => _fishingSpot = (ushort)(value?.Id ?? 0);
     }
 
     [IgnoreMember]
-    public bool HasSpot
+    public readonly bool HasSpot
         => _fishingSpot != 0;
 
     [NotMapped]
@@ -180,7 +180,7 @@ public partial class FishRecord
     [JsonIgnore]
     public Bait Bait
     {
-        get => HasBait
+        readonly get => HasBait
             ? GatherBuddy.GameData.Bait.TryGetValue(_bait, out var b) ? b :
             GatherBuddy.GameData.Fishes.TryGetValue(_bait, out var f) ? new Bait(f.ItemData) : Bait.Unknown
             : Bait.Unknown;
@@ -188,7 +188,7 @@ public partial class FishRecord
     }
 
     [IgnoreMember]
-    public bool HasBait
+    public readonly bool HasBait
         => _bait != 0;
 
     [NotMapped]
@@ -196,24 +196,24 @@ public partial class FishRecord
     [JsonIgnore]
     public Fish? Catch
     {
-        get => HasCatch ? GatherBuddy.GameData.Fishes.GetValueOrDefault(_catch) : null;
+        readonly get => HasCatch ? GatherBuddy.GameData.Fishes.GetValueOrDefault(_catch) : null;
         set => _catch = value?.ItemId ?? 0;
     }
 
     [IgnoreMember]
-    public uint CatchId
+    public readonly uint CatchId
         => _catch;
 
     [IgnoreMember]
-    public uint BaitId
+    public readonly uint BaitId
         => _bait;
 
     [IgnoreMember]
-    public ushort SpotId
+    public readonly ushort SpotId
         => _fishingSpot;
 
     [IgnoreMember]
-    public bool HasCatch
+    public readonly bool HasCatch
         => _catch != 0;
 
     public void SetTugHook(BiteType bite, HookSet set)
@@ -241,7 +241,7 @@ public partial class FishRecord
     }
 
     [IgnoreMember]
-    public BiteType Tug
+    public readonly BiteType Tug
         => (_tugAndHook & 0x0F) switch
         {
             0 => BiteType.无,
@@ -252,7 +252,7 @@ public partial class FishRecord
         };
 
     [IgnoreMember]
-    public HookSet Hook
+    public readonly HookSet Hook
         => (_tugAndHook >> 4) switch
         {
             0 => HookSet.None,
@@ -265,13 +265,13 @@ public partial class FishRecord
             _ => HookSet.Unknown,
         };
 
-    public bool Escaped()
+    public readonly bool Escaped()
         => Hook != HookSet.None && Tug != BiteType.无;
 
-    public bool MissedChance()
+    public readonly bool MissedChance()
         => Tug != BiteType.无 && Hook == HookSet.None;
 
-    public bool NothingHooked()
+    public readonly bool NothingHooked()
         => Hook == HookSet.None && Tug != BiteType.无;
 
     public SimpleFishRecord ToSimpleRecord()
@@ -391,13 +391,21 @@ public partial class FishRecord
             WorldId        = _worldId,
         };
 
+    internal readonly SharableRecord ToSharable()
+        => ((CatchId, Size, Bite, Amount, (byte)(_tugAndHook & 0x0F), Flags.HasFlag(Effects.Collectible), Flags.HasFlag(Effects.Large)),
+            (_timeStamp, BaitId, (uint)ContentIdHash, SpotId, Gathering, Perception, (byte)(_tugAndHook >> 4)),
+            (Flags.HasFlag(Effects.Snagging), Flags.HasFlag(Effects.Chum), Flags.HasFlag(Effects.Intuition), Flags.HasFlag(Effects.FishEyes),
+                Flags.HasFlag(Effects.IdenticalCast), Flags.HasFlag(Effects.SurfaceSlap), Flags.HasFlag(Effects.PrizeCatch),
+                Flags.HasFlag(Effects.Patience), Flags.HasFlag(Effects.Patience2), Flags.HasFlag(Effects.BigGameFishing), Flags.AmbitiousLure(),
+                Flags.ModestLure()));
+
     private static ushort From2Bytes(ReadOnlySpan<byte> bytes, int from)
         => (ushort)(bytes[from] | (bytes[from + 1] << 8));
 
     private static uint From4Bytes(ReadOnlySpan<byte> bytes, int from)
         => (uint)(bytes[from] | (bytes[from + 1] << 8) | (bytes[from + 2] << 16) | (bytes[from + 3] << 24));
 
-    private bool VerifyData()
+    private readonly bool VerifyData()
     {
         var ts = TimeStamp;
         if (ts < TimeStamp.Epoch || ts > GatherBuddy.Time.ServerTime)
@@ -415,13 +423,13 @@ public partial class FishRecord
         if ((Flags & ~ValidEffects) != 0)
             return false;
 
-        if ((_tugAndHook & 0x0F) > 4 || ((_tugAndHook >> 4) > 7))
+        if ((_tugAndHook & 0x0F) > 4 || _tugAndHook >> 4 > 7)
             return false;
 
         return true;
     }
 
-    public bool VerifyValidity()
+    public readonly bool VerifyValidity()
     {
         if (!Flags.HasFlag(Effects.Valid))
             return false;
