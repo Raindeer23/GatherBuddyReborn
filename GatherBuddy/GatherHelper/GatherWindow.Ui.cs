@@ -163,7 +163,7 @@ public class GatherWindow : Window
         if (GatherBuddy.Config.ShowGatherWindowOnlyAvailable && time.Start > GatherBuddy.Time.ServerTime)
             return;
 
-        var inventoryCount = item.GetTotalCount();
+        var inventoryCount = item.GetTotalCount(_plugin.AutoGatherListsManager.UsesRetainerInventory(item));
 
         if (quantity > 0 && inventoryCount >= quantity && GatherBuddy.Config.HideGatherWindowCompletedItems)
             return;
@@ -379,6 +379,8 @@ public class GatherWindow : Window
         }
         color.Pop();
         ImGuiUtil.HoverTooltip("左键启用或禁用自动采集, 右键显示或隐藏主界面");
+        if (GatherBuddy.AutoGather.CurrentRequestedTarget is { } target)
+            ImGui.Text($"目标: {target.Name[GatherBuddy.Language]}");
         using var table = ImRaii.Table("##table", GatherBuddy.Config.ShowGatherWindowTimers ? 2 : 1);
         if (!table)
             return;
