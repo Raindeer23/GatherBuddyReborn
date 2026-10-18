@@ -2,10 +2,10 @@
   {
     "Name": "GatherBuddy Reborn",
     "InternalName": "GatherBuddyReborn",
-    "AssemblyVersion": "7.5.0.14",
+    "AssemblyVersion": "7.5.0.15",
     "Author": "The Combat Reborn Team, AtmoOmen (本地化及国服适配), Raindeer23 (7.55 鱼类数据同步)",
     "Punchline": "GatherBuddy 自动采集版",
-    "Description": "GatherBuddy 自动采集版, 需要安装并启用 vnavmesh 用于寻路。已同步上游 7.55 传奇鱼的时间和天气条件，修复国服钓鱼计时器识别，加入中文鱼王钓法攻略，并修正水没翠玉的红蛆起饵。",
+    "Description": "GatherBuddy 自动采集版, 需要安装并启用 vnavmesh 用于寻路。已同步上游鱼类数据、后续窗口预览及自动钓鱼修复，保留国服计时器识别、中文鱼王攻略和水没翠玉的红蛆起饵。",
     "ApplicableVersion": "any",
     "Tags": [
       "采集",
@@ -17,7 +17,7 @@
     "DalamudApiLevel": 15,
     "RepoUrl": "https://github.com/Raindeer23/GatherBuddyReborn",
     "IconUrl": "https://raw.githubusercontent.com/FFXIV-CombatReborn/RebornAssets/main/IconAssets/GBR_Icon.png",
-    "DownloadLinkInstall": "https://github.com/Raindeer23/GatherBuddyReborn/releases/download/7.5.0.14/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/Raindeer23/GatherBuddyReborn/releases/download/7.5.0.14/latest.zip"
+    "DownloadLinkInstall": "https://github.com/Raindeer23/GatherBuddyReborn/releases/download/7.5.0.15/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/Raindeer23/GatherBuddyReborn/releases/download/7.5.0.15/latest.zip"
   }
 ]

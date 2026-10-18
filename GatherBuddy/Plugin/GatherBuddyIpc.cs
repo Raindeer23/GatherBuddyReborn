@@ -6,6 +6,7 @@ using Dalamud.Plugin.Ipc;
 using System.Numerics;
 using GatherBuddy.Classes;
 using GatherBuddy.Config;
+using GatherBuddy.Models;
 using ElliLib.Text;
 using System;
 using System.Diagnostics;
@@ -185,7 +186,7 @@ public sealed class GatherBuddyIpc : IDisposable
         if (_recordCreated?.SubscriptionCount is null or 0)
             return;
 
-        if (!record.Flags.HasFlag(FishRecord.Effects.Valid))
+        if (!record.Flags.HasFlag(Effects.Valid))
             return;
 
         try

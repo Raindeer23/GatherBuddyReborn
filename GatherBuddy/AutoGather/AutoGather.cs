@@ -264,7 +264,7 @@ namespace GatherBuddy.AutoGather
                 _fishingApproachLastProgressTime = DateTime.Now;
                 _fishingApproachLastCheckTime = DateTime.MinValue;
                 _fishingApproachPathObserved = false;
-                AutoStatus = "Fishing route stalled, retrying the same spot...";
+                AutoStatus = "前往钓点的路线停滞，正在重试...";
                 return;
             }
 
@@ -352,7 +352,7 @@ namespace GatherBuddy.AutoGather
 
                 if ((now - _fishingApproachLastProgressTime).TotalSeconds > GatherBuddy.Config.AutoGatherConfig.NavResetThreshold)
                 {
-                    FailFishingApproach(target, $"no destination progress for {(now - _fishingApproachLastProgressTime).TotalSeconds:F1}s", "Fishing route stalled twice, finding a nearby spot...", true, false);
+                    FailFishingApproach(target, $"no destination progress for {(now - _fishingApproachLastProgressTime).TotalSeconds:F1}s", "前往钓点的路线再次停滞，正在寻找附近钓点...", true, false);
                     return false;
                 }
 
@@ -362,7 +362,7 @@ namespace GatherBuddy.AutoGather
             if (!_fishingApproachPathObserved)
                 return true;
 
-            FailFishingApproach(target, $"path stopped {distance:F1}y from destination", "Fishing route stopped short twice, finding a nearby spot...", true, false);
+            FailFishingApproach(target, $"path stopped {distance:F1}y from destination", "连续两次未能到达钓点，正在寻找附近钓点...", true, false);
             return false;
         }
 
@@ -1449,7 +1449,7 @@ namespace GatherBuddy.AutoGather
             {
                 if (_advancedUnstuck.IsRunning)
                 {
-                    AutoStatus = "Fishing recovery in progress...";
+                    AutoStatus = "正在从钓鱼卡点中恢复...";
                     return;
                 }
 
@@ -1603,7 +1603,7 @@ namespace GatherBuddy.AutoGather
                     FishingSpotData[fish] = (newPos, newRot, DateTime.MaxValue);
                     SetFishingApproachPosition(fish, newPos);
 
-                    AutoStatus = "Fish detected! Relocating and waiting...";
+                    AutoStatus = "鱼类有所察觉，正在换位并等待...";
                     QueueQuitFishingTasks();
 
                     TaskManager.DelayNext(30000);
@@ -1618,7 +1618,7 @@ namespace GatherBuddy.AutoGather
                 {
                     GatherBuddy.Log.Warning($"[AutoGather] Persistent amiss (count: {_consecutiveAmissCount}) - teleporting out of zone to clear state...");
 
-                    AutoStatus = "Persistent amiss! Teleporting out to clear...";
+                    AutoStatus = "鱼类持续警觉，正在传送离开以重置...";
                     QueueQuitFishingTasks();
 
                     TaskManager.Enqueue(() =>
@@ -1643,7 +1643,7 @@ namespace GatherBuddy.AutoGather
                         _processingFishingToast = false;
                         WentHome = false;
                         GatherBuddy.Log.Information("[AutoGather] Amiss cleared by zone teleport. Returning to fishing spot...");
-                        AutoStatus = "Returning to fishing spot...";
+                        AutoStatus = "正在返回钓点...";
                         return true;
                     });
                 }

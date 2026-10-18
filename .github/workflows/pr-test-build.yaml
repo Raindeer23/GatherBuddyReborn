@@ -30,6 +30,9 @@ jobs:
 
       - name: Build Plugin
         run: dotnet build --no-restore -c Release Gatherbuddy/Gatherbuddy.csproj --output .\build
+      - name: Run sync regression checks
+        run: dotnet run --project tests/SyncRegression -- "./build" "$env:AppData\XIVLauncher\addon\Hooks\dev" "."
+
       - name: Build raphael-cli from raphael-rs
         run: |
           git clone https://github.com/KonaeAkira/raphael-rs.git raphael-rs-temp
